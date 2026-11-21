@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Settings — Clipper for Rumble</title>
+<link rel="stylesheet" href="options.css">
+<link rel="icon" href="../../icons/icon32.png">
+</head>
+<body>
+<main>
+  <header><img src="../../icons/icon48.png" alt="" width="40" height="40">
+    <div><h1>Clipper for Rumble — Settings</h1>
+    <p class="muted" id="welcome" hidden>Welcome! Head to any Rumble video and look for the <strong>Clip last 30s</strong> button under the player (or press Alt+C). Everything runs locally — no account, no uploads.</p></div>
+  </header>
+
+  <form id="form">
+    <section>
+      <h2>Clipping</h2>
+      <label>Clip length
+        <select id="clipLengthSec">
+          <option value="15">15 seconds</option>
+          <option value="30">30 seconds (recommended)</option>
+          <option value="60">60 seconds</option>
+          <option value="90">90 seconds</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="bufferEnabled"> Instant-replay buffer
+        <span class="hint">Keeps a rolling buffer of the playing video in memory (this device only, never saved unless you clip) so “Clip last 30s” works instantly, including on live streams. Uses a little CPU/RAM while a Rumble tab plays.</span>
+      </label>
+      <label>Buffer length
+        <select id="bufferSec">
+          <option value="35">35 seconds</option>
+          <option value="45">45 seconds</option>
+          <option value="75">75 seconds</option>
+          <option value="120">2 minutes</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="openEditorAfterClip"> Open the editor right after clipping</label>
+    </section>
+
+    <section>
+      <h2>Export defaults</h2>
+      <label>Default format
+        <select id="defaultFormat">
+          <option value="9x16">9:16 Vertical — TikTok / Shorts / Reels</option>
+          <option value="16x9">16:9 Horizontal — YouTube / X</option>
+          <option value="1x1">1:1 Square</option>
+          <option value="4x5">4:5 Portrait</option>
+        </select>
+      </label>
+      <label>Default framing
+        <select id="defaultLayout">
+          <option value="fit-blur">Fit with blurred background</option>
+          <option value="fill">Fill (crop)</option>
+          <option value="fit-bars">Fit with bars</option>
+        </select>
+      </label>
+      <label>Quality
+        <select id="quality">
+          <option value="low">Low — smaller files</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </label>
+      <label class="check"><input type="checkbox" id="preferMp4"> Prefer MP4 when Chrome supports it <span class="hint">MP4 uploads everywhere. Otherwise exports are WebM (also accepted by TikTok/YouTube; Instagram may require MP4).</span></label>
+      <label class="check"><input type="checkbox" id="addAttribution"> Burn in a source credit line by default</label>
+      <label>File name pattern
+        <input type="text" id="filenameTemplate">
+        <span class="hint">Placeholders: {title} {duration} {format} {ext}</span>
+      </label>
+      <label>Default hashtags for post captions
+        <input type="text" id="hashtags" placeholder="Rumble, clips">
+      </label>
+    </section>
+
+    <section>
+      <h2>Your library</h2>
+      <p class="muted" id="libInfo">…</p>
+      <div class="row">
+        <button type="button" class="btn" id="openEditor">Open clip editor / library</button>
+        <button type="button" class="btn danger" id="wipe">Delete all clips &amp; exports</button>
+      </div>
+    </section>
+
+    <div class="bar">
+      <span id="savedNote" class="saved" hidden>Saved ✓</span>
+      <button type="submit" class="btn primary">Save settings</button>
+    </div>
+  </form>
+
+  <footer>
+    <p>Keyboard shortcuts: <kbd>Alt+C</kbd> clip last 30s · <kbd>Alt+Shift+R</kbd> record next 30s — change them at <button class="link" id="shortcuts">chrome://extensions/shortcuts</button>.</p>
+    <p class="muted">Privacy: clips are captured, rendered and stored only on this device. This extension makes no network requests and collects no data. Unofficial tool; not affiliated with Rumble Inc. Clip responsibly — respect creators’ rights and Rumble’s Terms of Service.</p>
+  </footer>
+</main>
+<script src="../lib/util.js"></script>
+<script src="../lib/clipdb.js"></script>
+<script src="../lib/settings.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

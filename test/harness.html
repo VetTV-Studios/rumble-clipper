@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>export harness</title></head>
+<body>
+<pre id="out">RUNNING</pre>
+<script src="../src/lib/util.js"></script>
+<script src="../src/lib/exporter.js"></script>
+<script>
+const out = document.getElementById('out');
+const lines = [];
+function log(name, pass, extra) {
+  lines.push((pass ? 'PASS ' : 'FAIL ') + name + (extra ? ' :: ' + extra : ''));
+  out.textContent = lines.join('\n') + '\nRUNNING';
+}
+function done() { out.textContent = lines.join('\n') + '\nDONE'; }
+
+async function main() {
+  const U = window.RCUtil, EX = window.RCExporter;
+  // 1) Synthetic 640x360 "broadcast": animated canvas + 440Hz tone
+  const src = document.createElement('canvas'); src.width = 640; src.height = 360;
+  const sctx = src.getContext('2d');
+  let frame = 0;
+  const anim = setInterval(() => {
+    frame++;
+    sctx.fillStyle = frame % 2 ? '#123a12' : '#0d2a4a'; sctx.fillRect(0, 0, 640, 360);
+    sctx.fillStyle = '#8dc63f'; sctx.fillRect((frame * 7) % 600, 150, 40, 40);
+    sctx.fillStyle = '#fff'; sctx.font = '28px sans-serif'; sctx.fillText('t=' + frame, 20, 40);
+  }, 33);
+  const ac = new AudioContext();
+  const osc = ac.createOscillator(); osc.frequency.value = 440;
+  const dest = ac.createMediaStreamDestination();
+  osc.connect(dest); osc.start();
+  const stream = new MediaStream([...src.captureStream(30).getVideoTracks(), ...dest.stream.getAudioTracks()]);
+  const mime = U.pickMimeType(false);
+  log('mime picked', !!mime, mime);
+  const rec = new MediaRecorder(stream, { mimeType: mime || undefined, videoBitsPerSecond: 4000000, audioBitsPerSecond: 128000 });
+  const chunks = []; rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  const stopped = new Promise(r => rec.onstop = r);
+  rec.start(200);
+  await new Promise(r => setTimeout(r, 3200));
+  rec.stop(); await stopped; clearInterval(anim); osc.stop();
+  const segBlob = new Blob(chunks, { type: rec.mimeType });
+  log('segment recorded', segBlob.size > 20000, segBlob.size + ' bytes ' + segBlob.type);
+
+  // 2) Probe like the editor does
+  const probed = await EX.probeSegments([segBlob]);
+  log('probe duration', probed[0].duration > 2, probed[0].duration.toFixed(2) + 's');
+  log('probe dimensions', probed[0].width === 640 && probed[0].height === 360, probed[0].width + 'x' + probed[0].height);
+
+  async function tryExport(fmt, layout, seconds) {
+    const handle = EX.exportClip([segBlob], probed, {
+      format: fmt, layout, focusX: 0.5, focusY: 0.5, zoom: 1,
+      startSec: 0.2, endSec: 0.2 + seconds, preferMp4: false,
+      videoBitsPerSecond: 4000000, captionText: 'Test clip', captionPosition: 'bottom',
+      attribution: 'Clipped from Test on Rumble'
+    });
+    const blob = await handle.promise;
+    const v = document.createElement('video');
+    const meta = await new Promise(res => {
+      v.onloadedmetadata = () => res({ w: v.videoWidth, h: v.videoHeight });
+      v.src = URL.createObjectURL(blob);
+    });
+    log('export ' + fmt + '/' + layout, blob.size > 8000, blob.size + ' bytes ' + blob.type);
+    log('export ' + fmt + ' dimensions', meta.w > 0, meta.w + 'x' + meta.h + ' aspect ' + (meta.w / meta.h).toFixed(3));
+    // audio actually present? decode and look for signal energy
+    try {
+      const buf = await blob.arrayBuffer();
+      const decoded = await ac.decodeAudioData(buf.slice(0));
+      const ch = decoded.getChannelData(0);
+      let peak = 0; for (let i = 0; i < ch.length; i += 97) peak = Math.max(peak, Math.abs(ch[i]));
+      log('export ' + fmt + ' has audio', decoded.duration > 0.5 && peak > 0.05,
+        'decoded ' + decoded.duration.toFixed(2) + 's peak ' + peak.toFixed(2));
+    } catch (e) {
+      log('export ' + fmt + ' has audio', false, 'decode failed: ' + e.message);
+    }
+  }
+
+  await tryExport('9x16', 'fit-blur', 2);
+  await tryExport('16x9', 'fill', 1.5);
+  done();
+}
+main().catch(e => { log('harness error', false, e.message); done(); });
+</script>
+</body></html>

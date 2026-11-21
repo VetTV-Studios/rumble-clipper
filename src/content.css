@@ -1,0 +1,54 @@
+/* Clipper for Rumble — in-page UI (namespaced rc-*, shadow-safe plain CSS) */
+#rc-clipper-root, #rc-clipper-root * { box-sizing: border-box; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+#rc-clipper-root { position: static; }
+
+#rc-clipper-root .rc-panel {
+  z-index: 2147483000; display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(13, 17, 13, 0.92); border: 1px solid rgba(141, 198, 63, 0.45);
+  border-radius: 12px; padding: 6px 8px; box-shadow: 0 6px 24px rgba(0,0,0,.45);
+  backdrop-filter: blur(6px);
+}
+
+#rc-clipper-root .rc-btn {
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.18); background: #1c241a; color: #eef5e9;
+  font-size: 13px; font-weight: 600; line-height: 1; padding: 8px 12px; border-radius: 8px;
+}
+#rc-clipper-root .rc-btn:hover { background: #26331f; border-color: rgba(141,198,63,.7); }
+#rc-clipper-root .rc-btn:focus-visible { outline: 2px solid #8dc63f; outline-offset: 2px; }
+#rc-clipper-root .rc-btn-main { background: #8dc63f; border-color: #8dc63f; color: #0d1507; }
+#rc-clipper-root .rc-btn-main:hover { background: #a3d65c; }
+#rc-clipper-root .rc-btn-small { padding: 6px 9px; font-size: 12px; }
+#rc-clipper-root .rc-btn-ghost { background: transparent; }
+#rc-clipper-root .rc-dot { width: 9px; height: 9px; border-radius: 50%; background: #ff4d4d; display: inline-block; }
+
+#rc-clipper-root .rc-buffer {
+  width: 64px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.14);
+  overflow: hidden; display: inline-block; vertical-align: middle;
+}
+#rc-clipper-root .rc-buffer-fill { display: block; height: 100%; width: 0%; background: #8dc63f; transition: width .6s ease; }
+
+#rc-clipper-root .rc-toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px);
+  z-index: 2147483001; max-width: min(92vw, 560px);
+  background: rgba(13,17,13,.95); color: #eef5e9; border: 1px solid rgba(141,198,63,.5);
+  border-radius: 10px; padding: 12px 16px; font-size: 14px; font-weight: 500;
+  opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
+  box-shadow: 0 10px 32px rgba(0,0,0,.5); text-align: center;
+}
+#rc-clipper-root .rc-toast-show { opacity: 1; transform: translate(-50%, 0); }
+#rc-clipper-root .rc-toast-error { border-color: rgba(255,92,92,.75); }
+
+#rc-clipper-root .rc-countdown {
+  position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
+  z-index: 2147483001; display: flex; align-items: center; gap: 10px;
+  background: rgba(13,17,13,.95); color: #fff; border: 1px solid rgba(255,77,77,.65);
+  border-radius: 12px; padding: 10px 14px; font-size: 14px; font-weight: 600;
+  box-shadow: 0 10px 32px rgba(0,0,0,.5);
+}
+#rc-clipper-root .rc-countdown[hidden] { display: none; }
+#rc-clipper-root .rc-rec-dot {
+  width: 11px; height: 11px; border-radius: 50%; background: #ff4d4d;
+  animation: rc-pulse 1s ease-in-out infinite;
+}
+@keyframes rc-pulse { 0%,100% { opacity: 1; } 50% { opacity: .25; } }

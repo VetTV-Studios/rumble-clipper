@@ -1,0 +1,12 @@
+{
+  "name": "rumble-clipper",
+  "version": "1.0.1",
+  "private": true,
+  "description": "Clipper for Rumble — 30-second vertical & horizontal clips with audio. Chrome Web Store extension (Manifest V3). No build step: the folder loads as an unpacked extension as-is.",
+  "scripts": {
+    "test": "node test/logic.test.js",
+    "validate": "node scripts/validate.js",
+    "icons": "python scripts/make_icons.py",
+    "package": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package.ps1"
+  }
+}

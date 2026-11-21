@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clip Editor — Clipper for Rumble</title>
+<link rel="stylesheet" href="editor.css">
+<link rel="icon" href="../../icons/icon32.png">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><img src="../../icons/icon32.png" alt="" width="28" height="28"><div>
+    <strong>Clipper for Rumble</strong><span class="sub">30-second clips · vertical &amp; horizontal · with audio</span>
+  </div></div>
+  <div class="topbar-actions">
+    <span class="storage" id="storageInfo" title="Local clip storage"></span>
+    <button class="btn btn-ghost" id="openOptions">Settings</button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="library card">
+    <div class="library-head"><h2>My clips</h2><span id="clipCount" class="muted"></span></div>
+    <div id="clipList" class="clip-list"><p class="muted pad">Loading…</p></div>
+    <p class="muted small pad">Tip: on any Rumble video press <kbd>Alt+C</kbd> to clip the last 30s, or <kbd>Alt+Shift+R</kbd> to record the next 30s.</p>
+  </aside>
+
+  <main class="stage">
+    <section class="card editor-card" id="editorCard" hidden>
+      <div class="editor-head">
+        <div>
+          <h1 id="clipTitle">Untitled clip</h1>
+          <p class="muted" id="clipMeta"></p>
+        </div>
+        <a class="btn btn-ghost" id="sourceLink" href="#" target="_blank" rel="noopener">Open source ↗</a>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-box" id="previewBox">
+          <canvas id="previewCanvas" width="540" height="960"></canvas>
+          <video id="srcVideo" playsinline preload="auto"></video>
+        </div>
+        <div class="transport">
+          <button class="btn btn-icon" id="playBtn" title="Play / pause preview">▶</button>
+          <span class="time" id="timeLabel">0:00.0 / 0:00.0</span>
+          <label class="loop"><input type="checkbox" id="loopSel" checked> Loop selection</label>
+          <span class="muted small" id="previewNote">Preview shows your final framing.</span>
+        </div>
+        <div class="timeline">
+          <input type="range" id="seekBar" min="0" max="1000" value="0" aria-label="Seek">
+          <div class="trim-row">
+            <label>Start <input type="number" id="trimStartNum" min="0" step="0.1">s</label>
+            <input type="range" id="trimStart" min="0" max="1000" value="0" aria-label="Trim start">
+            <span class="sel-dur" id="selDur">30.0s selected</span>
+            <input type="range" id="trimEnd" min="0" max="1000" value="1000" aria-label="Trim end">
+            <label>End <input type="number" id="trimEndNum" min="0" step="0.1">s</label>
+          </div>
+          <div class="chips" role="group" aria-label="Quick clip lengths">
+            <span class="muted small">Length:</span>
+            <button class="chip" data-len="15">15s</button>
+            <button class="chip chip-on" data-len="30">30s</button>
+            <button class="chip" data-len="60">60s</button>
+            <button class="chip" data-len="full">Full capture</button>
+            <span class="muted small">(aligned to end — drag the trim sliders to move it)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls-grid">
+        <fieldset>
+          <legend>Format</legend>
+          <div class="format-cards" id="formatCards">
+            <button class="fcard" data-format="9x16"><span class="fshape f-9x16"></span>9:16<small>Vertical · Shorts / Reels / TikTok</small></button>
+            <button class="fcard" data-format="16x9"><span class="fshape f-16x9"></span>16:9<small>Horizontal · YouTube / X</small></button>
+            <button class="fcard" data-format="1x1"><span class="fshape f-1x1"></span>1:1<small>Square · Feeds</small></button>
+            <button class="fcard" data-format="4x5"><span class="fshape f-4x5"></span>4:5<small>Portrait · Feeds</small></button>
+          </div>
+          <p class="muted small" id="outputSizeLabel"></p>
+        </fieldset>
+
+        <fieldset>
+          <legend>Framing</legend>
+          <label class="row">Layout
+            <select id="layoutSel">
+              <option value="fit-blur">Fit with blurred background</option>
+              <option value="fill">Fill (crop to fill frame)</option>
+              <option value="fit-bars">Fit with bars</option>
+            </select>
+          </label>
+          <label class="row" id="barColorRow" hidden>Bar colour <input type="color" id="barColor" value="#000000"></label>
+          <label class="row">Focus ↔ <input type="range" id="focusX" min="0" max="100" value="50"><span class="val" id="focusXVal">Centre</span></label>
+          <label class="row">Focus ↕ <input type="range" id="focusY" min="0" max="100" value="50"><span class="val" id="focusYVal">Centre</span></label>
+          <label class="row">Zoom <input type="range" id="zoom" min="100" max="250" value="100"><span class="val" id="zoomVal">1.00×</span></label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Text on clip</legend>
+          <label class="row col">Caption (optional)
+            <input type="text" id="captionText" maxlength="90" placeholder="e.g. He said WHAT?! 😱">
+          </label>
+          <label class="row">Caption position
+            <select id="captionPos"><option value="bottom">Bottom</option><option value="top">Top</option></select>
+          </label>
+          <label class="row check"><input type="checkbox" id="attributionOn" checked> Show source credit</label>
+          <label class="row col">Credit line
+            <input type="text" id="attributionText" maxlength="90">
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Export</legend>
+          <label class="row">File type
+            <select id="fileType"><option value="mp4">MP4 (best for socials, if supported)</option><option value="webm">WebM</option></select>
+          </label>
+          <label class="row">Quality
+            <select id="quality"><option value="low">Low — smaller file</option><option value="medium">Medium</option><option value="high">High</option></select>
+          </label>
+          <label class="row col">File name <input type="text" id="filenameBox"></label>
+          <button class="btn btn-primary btn-big" id="exportBtn">Export clip</button>
+          <div class="progress" id="exportProgress" hidden>
+            <div class="progress-bar"><span id="exportBarFill"></span></div>
+            <span id="exportPct">0%</span>
+            <button class="btn btn-ghost" id="cancelExport">Cancel</button>
+          </div>
+          <p class="muted small">Export renders in real time on this device (a 30s clip takes ~30s). Audio is included. Keep this tab visible.</p>
+        </fieldset>
+      </div>
+
+      <section id="resultPanel" hidden>
+        <h2>Your clip is ready 🎉</h2>
+        <div class="result-grid">
+          <video id="resultVideo" controls playsinline></video>
+          <div class="result-actions">
+            <button class="btn btn-primary btn-big" id="downloadBtn">⬇ Download clip</button>
+            <button class="btn" id="shareFileBtn" hidden>Share file…</button>
+            <p class="muted small" id="resultInfo"></p>
+            <h3>Post it</h3>
+            <p class="muted small">Platforms don’t let extensions upload for you, so: download, pick a destination below (your caption is copied automatically), attach the file, paste, post.</p>
+            <div class="post-grid" id="postGrid"></div>
+            <label class="row col">Caption for your post
+              <textarea id="postCaption" rows="4"></textarea>
+            </label>
+            <button class="btn" id="copyCaptionBtn">Copy caption</button>
+            <h3>Or share the source video link</h3>
+            <div class="post-grid" id="linkShareGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="exports-wrap">
+        <h2>Exports from this clip</h2>
+        <div id="exportsList"><p class="muted">No exports yet.</p></div>
+      </section>
+    </section>
+
+    <section class="card empty" id="emptyState">
+      <h1>No clip open</h1>
+      <p>Pick a clip on the left — or make a new one:</p>
+      <ol>
+        <li>Open any video or live stream on <strong>rumble.com</strong>.</li>
+        <li>Click <strong>Clip last 30s</strong> under the player (or press <kbd>Alt+C</kbd>).</li>
+        <li>Trim it here, pick vertical or horizontal, export, download, post.</li>
+      </ol>
+    </section>
+  </main>
+</div>
+
+<footer class="foot muted small">Clips are created and stored only on this device — nothing is uploaded. Unofficial tool; not affiliated with Rumble Inc. Please respect creators’ rights when sharing.</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../lib/util.js"></script>
+<script src="../lib/clipdb.js"></script>
+<script src="../lib/settings.js"></script>
+<script src="../lib/exporter.js"></script>
+<script src="../lib/share.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>

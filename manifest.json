@@ -1,0 +1,93 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_appName__",
+  "short_name": "__MSG_appShortName__",
+  "version": "1.0.1",
+  "description": "__MSG_appDescription__",
+  "default_locale": "en",
+  "minimum_chrome_version": "116",
+  "author": "Rumble Clipper Contributors",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Clipper for Rumble",
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "options_page": "src/options/options.html",
+  "permissions": [
+    "storage",
+    "downloads",
+    "contextMenus",
+    "offscreen",
+    "activeTab"
+  ],
+  "optional_permissions": [
+    "tabCapture"
+  ],
+  "host_permissions": [
+    "*://rumble.com/*",
+    "*://*.rumble.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://rumble.com/*",
+        "*://*.rumble.com/*"
+      ],
+      "js": [
+        "src/lib/util.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/bridge/bridge.html",
+        "src/editor/editor.html",
+        "icons/*.png"
+      ],
+      "matches": [
+        "*://rumble.com/*",
+        "*://*.rumble.com/*"
+      ]
+    }
+  ],
+  "commands": {
+    "clip-last-30": {
+      "suggested_key": {
+        "default": "Alt+C",
+        "mac": "Alt+C"
+      },
+      "description": "Clip the last 30 seconds"
+    },
+    "record-next-30": {
+      "suggested_key": {
+        "default": "Alt+Shift+R",
+        "mac": "Alt+Shift+R"
+      },
+      "description": "Record the next 30 seconds"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; media-src 'self' blob:; img-src 'self' data: blob:;"
+  }
+}

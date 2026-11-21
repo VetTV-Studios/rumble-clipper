@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy — Clipper for Rumble</title>
+  <meta name="description" content="Privacy policy for Clipper for Rumble. The extension collects nothing: no accounts, no analytics, no tracking, no servers.">
+  <link rel="canonical" href="https://www.vettvstudios.com/rumble-clipper/privacy">
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    h1 { line-height: 1.2; margin: 0 0 .25em; }
+    .meta { opacity: .75; margin: 0 0 1.5rem; }
+    h2 { margin-top: 2rem; font-size: 1.25rem; }
+    ul { padding-left: 1.2rem; }
+    li { margin: .35em 0; }
+    a { color: #0b57d0; }
+    footer { margin-top: 3rem; font-size: .9rem; opacity: .75; border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent); padding-top: 1rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Privacy Policy — Clipper for Rumble</h1>
+    <p class="meta"><em>Last updated: 2026-11-20</em></p>
+
+    <p><strong>The short version: this extension collects nothing.</strong> There are no
+    accounts, no analytics, no tracking, no advertising, and no servers.
+    Clips are captured, edited, rendered, and stored entirely on your own
+    device, in your browser.</p>
+
+    <h2>What the extension accesses</h2>
+    <ul>
+      <li><strong>The video you are watching on rumble.com.</strong> When you use a clip
+        action, the extension captures the playing video and its audio using
+        your browser's built-in media APIs, on your device.</li>
+      <li><strong>An optional replay buffer.</strong> If "Instant-replay buffer" is enabled
+        in settings, a rolling buffer of recent playback is kept <strong>in memory
+        only</strong> while a Rumble tab plays, so "Clip last 30s" works instantly.
+        Buffered media is discarded continuously and is only saved if you
+        explicitly clip it. You can turn the buffer off at any time.</li>
+      <li><strong>Local storage.</strong> Clips you save, exports you render, and your
+        settings are stored in your browser's local extension storage
+        (IndexedDB / <code>chrome.storage</code>) on your device. Settings may sync
+        between your own signed-in Chrome browsers via <code>chrome.storage.sync</code>;
+        they are not sent to us (we have no server to receive them).</li>
+    </ul>
+
+    <h2>What is sent over the network</h2>
+    <p>Nothing. The extension makes <strong>no network requests</strong> of its own. It
+    contains no analytics SDKs, no remotely hosted code, and no third-party
+    services. When you click a "Post to…" button, your browser simply opens
+    that platform's normal upload page in a new tab; anything you then
+    upload there is governed by that platform's own privacy policy.</p>
+
+    <h2>Data sharing</h2>
+    <p>We do not collect, sell, rent, or share any personal data, browsing
+    history, or media, because none of it ever reaches us.</p>
+
+    <h2>Deleting your data</h2>
+    <p>Use the trash controls in the clip editor, or "Delete all clips &amp;
+    exports" in Settings, or uninstall the extension — uninstalling removes
+    all locally stored clips, exports, and settings.</p>
+
+    <h2>Children</h2>
+    <p>The extension is a general-purpose media tool and is not directed at
+    children under 13.</p>
+
+    <h2>Changes</h2>
+    <p>If a future version ever changes this policy, the updated policy will
+    be published at this URL and the version above will change before the
+    new behaviour ships.</p>
+
+    <h2>Contact</h2>
+    <p>Questions: open an issue on the project repository:
+    <a href="https://github.com/VetTV-Studios/rumble-clipper/issues">https://github.com/VetTV-Studios/rumble-clipper/issues</a>.</p>
+
+    <hr>
+    <p><em>Clipper for Rumble is an unofficial tool and is not affiliated with
+    Rumble Inc.</em></p>
+
+    <footer>
+      <a href="../">Clipper for Rumble</a> ·
+      <a href="https://github.com/VetTV-Studios/rumble-clipper">GitHub</a> ·
+      <a href="https://www.vettvstudios.com/rumble-clipper/privacy">Official policy URL</a> ·
+      VetTV Studios
+    </footer>
+  </main>
+</body>
+</html>

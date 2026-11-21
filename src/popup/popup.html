@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Clipper for Rumble</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body>
+<header>
+  <img src="../../icons/icon32.png" alt="" width="26" height="26">
+  <div><strong>Clipper for Rumble</strong><span id="statusLine">Checking this tab…</span></div>
+</header>
+
+<section id="onRumble" hidden>
+  <p class="video-title" id="videoTitle"></p>
+  <div class="grid">
+    <button class="btn primary" id="clipLast">✂ Clip last <span class="len">30</span>s</button>
+    <button class="btn" id="recordNext">● Record next <span class="len">30</span>s</button>
+  </div>
+  <p class="hint" id="bufferHint"></p>
+  <div class="fmt-row">
+    <span>Default format</span>
+    <div class="seg" role="group" aria-label="Default export format">
+      <button data-format="9x16" class="seg-btn">9:16 Vertical</button>
+      <button data-format="16x9" class="seg-btn">16:9 Horizontal</button>
+    </div>
+  </div>
+  <div id="fallbackBox" class="fallback" hidden>
+    <p><strong>Player blocks direct capture.</strong> Record the whole tab instead — the editor crops to the player.</p>
+    <button class="btn" id="tabCaptureBtn">Record tab for <span class="len">30</span>s</button>
+    <button class="btn ghost" id="tabStopBtn" hidden>Stop tab recording</button>
+  </div>
+</section>
+
+<section id="offRumble" hidden>
+  <p>Open a video or live stream on <strong>rumble.com</strong>, then:</p>
+  <ul>
+    <li>Click <strong>Clip last 30s</strong> under the player — or press <kbd>Alt+C</kbd></li>
+    <li>Trim, choose vertical / horizontal, export with audio</li>
+    <li>Download and post to TikTok, Shorts, Reels, X…</li>
+  </ul>
+  <button class="btn primary wide" id="goRumble">Open Rumble</button>
+</section>
+
+<section class="library">
+  <div class="lib-head"><strong>Recent clips</strong><button class="link" id="openLibrary">Open editor →</button></div>
+  <div id="recentList"><p class="muted">No clips yet.</p></div>
+</section>
+
+<footer>
+  <button class="link" id="openOptions">Settings</button>
+  <span class="muted">·</span>
+  <span class="muted small">All processing is local. Unofficial — not affiliated with Rumble Inc.</span>
+</footer>
+<div class="toast" id="toast"></div>
+
+<script src="../lib/util.js"></script>
+<script src="../lib/clipdb.js"></script>
+<script src="../lib/settings.js"></script>
+<script src="popup.js"></script>
+</body>
+</html>

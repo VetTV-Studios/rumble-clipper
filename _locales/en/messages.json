@@ -1,0 +1,14 @@
+{
+  "appName": {
+    "message": "Clipper for Rumble — 30s Clips for Shorts & Reels",
+    "description": "Extension name shown in the Chrome Web Store and chrome://extensions."
+  },
+  "appShortName": {
+    "message": "Rumble Clipper",
+    "description": "Short extension name for space-constrained UI."
+  },
+  "appDescription": {
+    "message": "Make 30s clips from Rumble videos & live streams. Export vertical 9:16 or horizontal 16:9 with audio, download & post anywhere.",
+    "description": "Extension description (must stay within the 132-character store limit)."
+  }
+}
